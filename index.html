@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Detective Wiki</title>
+
+
+	<link rel="stylesheet" href="https://bootswatch.com/5/spacelab/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue-select@3.11.2/dist/vue-select.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-select@3.11.2/dist/vue-select.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+	<div class="container d-flex flex-column pt-3" id="app" @mousemove="resizeMove" @mouseup="resizeUp">
+		<ul class="nav nav-tabs header">
+			<li class="nav-item" v-for="type in types">
+				<a class="nav-link" :class="{'active':tab==type.value}" @click="openTab(type.value)" href="#"><span class="material-icons">{{type.icon}}</span><span>{{type.label}}</span></a>
+			</li>
+			<div class="ms-auto">
+				<button class="btn btn-danger btn-sm" @click="clearAll()"><span class="material-icons" title="Удалить всё">delete</span></button>
+				<button class="btn btn-warning btn-sm" @click="openFile()" title="Открыть файл"><span class="material-icons">snippet_folder</span></button>
+				<button class="btn btn-success btn-sm" @click="saveToFile()" title="Сохранить в файл"><span class="material-icons">save</span></button>
+			</div>
+		</ul>
+
+		<div class="d-flex mt-4 flex-gap-2 content">
+			<div class="sidebar" :style="{width:sidebarWidth+'px',minWidth:sidebarWidth+'px'}">
+				<div class="d-flex"><i class="bi bi-search"></i>
+					<div class="input-group">
+						<span class="input-group-text" id="basic-addon1"><span class="material-icons">search</span></span>
+						<input type="search" class="form-control me-2" v-model="search">
+					</div>
+					<button class="btn btn-success" @click="addObject(tab)"><span class="material-icons">add</span></button>
+				</div>
+				<div class="list">
+					<div class="list-group">
+						<a href="#" class="list-group-item list-group-item-action" v-for="item of filterObjects" :class="{'active':item==currentObject}" @click="openObject(item.id)">
+							<span v-if="item.title.length">{{item.title}}</span>
+							<span v-else>без имени</span>
+						</a>
+					</div>
+				</div>
+				<div class="resizer" @mousedown="resizeDown">&nbsp;</div>
+			</div>
+
+			<div class="mainbar" v-if="currentObject != null" style="overflow-x: hidden;">
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a class="nav-link" :class="{'active':mode=='view'}" @click="changeMode('view')" href="#"><span class="material-icons">edit</span><span>Редактор</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" :class="{'active':mode=='tree'}" @click="changeMode('tree')" href="#"><span class="material-icons">account_tree</span><span>Дерево</span></a>
+					</li>
+				</ul>
+				<div class="view workflow" v-show="mode=='view'">
+					<div class="m-3">
+						<div class="fromgroup">
+							<div class="d-flex">
+								<input id="datetime" type="datetime-local" class="form-control datetime me-2" v-if="currentObject.type=='events'" v-model="currentObject.time">
+								<input type="text" id="name" class="form-control me-2" v-model="currentObject.title" id="title" placeholder="имя">
+								<button class="btn btn-danger" @click="remObject" tabindex="-1"><span class="material-icons">delete</span></button>
+							</div>
+						</div>
+						<div class="fromgroup mt-2">
+							<textarea class="form-control" v-model="currentObject.description" id="desc" placeholder="описание"></textarea>
+						</div>
+
+						<h3 class="mt-3">Связи</h3>
+
+						<div class="d-flex mt-2">
+							<v-select :options="filterOptions" label="title" :reduce="item => item.id" v-model="currentRelationId" class="select me-2"></v-select>
+							<input type="text" class="form-control me-2" v-model="currentRelationDescription" placeholder="характер связи" v-on:keyup.enter="addRelation"></input>
+							<button class="btn btn-success" @click="addRelation" :disabled="currentRelationId==null"><span class="material-icons">add</span></button>
+						</div>
+
+						<div v-for="type in types">
+							<h5 class="mt-4">{{type.label}}</h5>
+							<div v-for="relation of filterRelations(currentObject.id, type.value)" class="d-flex my-2">
+								<div class="w-50 me-2"><a href="#" @click="openObject(relation.id2)">{{getObject(relation.id2).title}}</a></div>
+								<div class="w-100">{{relation.description}}</div>
+								<div class="d-inline-flex align-items-start">
+									<button class="btn btn-warning btn-sm me-2" @click="editRelation(relation.id1, relation.id2)"><span class="material-icons">edit</span></button>
+									<button class="btn btn-danger btn-sm" @click="remRelation(relation.id1, relation.id2)"><span class="material-icons">delete</span></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div v-show="mode=='tree'" class=" workflow">
+					<div class="d-flex justify-content-between align-items-center">
+						<h3 class="ms-3">{{currentObject.title}}</h3>
+						<div class="m-3 text-end">
+							<button class="btn btn-secondary btn-sm me-1" @click="zoomOut"><span class="material-icons">zoom_in</span> {{Math.round(scale*100)}}%</button>
+							<button class="btn btn-secondary btn-sm me-1" @click="expandAll"><span class="material-icons" title="развернуть всё">library_add_check</span></button>
+							<button class="btn btn-secondary btn-sm" @click="collapseAll" title="свернуть всё"><span class="material-icons">indeterminate_check_box</span></button>
+						</div>
+					</div>
+					<div class="treeview">
+						<div class="scroll" :class="{now:scroll}" @mousedown.stop="mDown($event)" @mouseup.stop="mUp($event)" @mouseleave.stop="mLeave($event)" @mousemove.prevent.stop="mMove($event)" @wheel.prevent="mWheel($event)">
+							<ul class="tree horizontal" id="tree" :style="{ transform: 'scale('+ scale + ')' }"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-9 text-center" v-else>не выбрано</div>
+		</div>
+	</div>
+
+	<script src="main.js"></script>
+</body>
+
+</html>

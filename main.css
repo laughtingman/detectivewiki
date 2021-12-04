@@ -1,0 +1,341 @@
+body, html {
+	overflow: hidden;
+	user-select: none;
+}
+
+h5:only-child {
+	display: none;
+}
+
+.material-icons {
+	font-size: 1em;
+	vertical-align: -0.15em;
+}
+
+.material-icons:not(:last-child) {
+	margin-right: 0.5em;
+}
+
+.select {
+	min-width: 30%;
+}
+
+.vs__dropdown-toggle {
+	padding: 5px;
+}
+
+html {
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.datetime {
+	width: 18rem;
+}
+
+/*tree */
+
+.tree {
+	margin: 18px;
+	padding: 0;
+}
+
+.tree:not(:empty):before,
+.tree:not(:empty):after,
+.tree ul:not(:empty):before,
+.tree ul:not(:empty):after,
+.tree li:not(:empty):before,
+.tree li:not(:empty):after {
+	display: block;
+	position: absolute;
+	content: "";
+}
+
+.tree ul,
+.tree li {
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+.tree li {
+	list-style: none;
+}
+
+.tree li>div {
+	background-color: #eee;
+	color: #222;
+	padding: 5px;
+	display: inline-block;
+	border-radius: 0.2rem;
+}
+
+.tree li>div.sub {
+	opacity: 0.5;
+}
+
+.tree.horizontal li {
+	display: flex;
+	align-items: center;
+	margin-left: 24px;
+}
+
+.tree.horizontal li div {
+	margin: 6px 0;
+}
+
+.tree.horizontal li:before {
+	border-left: 1px solid #ddd;
+	height: 100%;
+	width: 0;
+	top: 0;
+	left: -12px;
+}
+
+.tree.horizontal li:first-child:before {
+	height: 50%;
+	top: 50%;
+}
+
+.tree.horizontal li:last-child:before {
+	height: 50%;
+	bottom: 50%;
+	top: auto;
+}
+
+.tree.horizontal li:after,
+.tree.horizontal li ul:after {
+	border-top: 1px solid #ddd;
+	height: 0;
+	width: 12px;
+	top: 50%;
+	left: -12px;
+}
+
+.tree.horizontal li:only-child:before {
+	content: none;
+}
+
+.tree.horizontal li ul:after {
+	left: 0;
+}
+
+.tree.horizontal>li:only-child {
+	margin-left: 0;
+}
+
+.tree.horizontal>li:only-child:before,
+.tree.horizontal>li:only-child:after {
+	content: none;
+}
+
+/* .tree li:hover>div {
+	background-color: #ccc;
+} */
+
+
+
+.tree label {
+	padding-left: 1.1rem;
+}
+
+.tree input[type=checkbox] {
+	position: absolute;
+	left: 0.4rem;
+	margin-bottom: -0.1rem;
+}
+
+.tree input[type=checkbox]:not(:checked)~ul {
+	display: none;
+}
+
+.tree.tree.horizontal {
+	transform-origin: 0 0;
+	margin: 0 auto;
+	padding: 1rem;
+}
+
+.tree li.last {
+	margin-right: 1rem;
+}
+
+.tree .last input {
+	display: none;
+}
+
+.tree .last label {
+	padding-left: 0;
+}
+
+a.disabled {
+	color: #222;
+	pointer-events: none;
+	text-decoration: none;
+}
+
+.container {
+	min-width: 850px;
+}
+
+.container,
+.sidebar,
+.mainbar {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+}
+
+.sidebar {
+	width: 300px;
+}
+
+
+.sidebar {
+	
+	height: 100%;
+	margin-right: 1rem;
+	margin-bottom: 1rem;
+	position: relative;
+}
+
+.sidebar .list a {
+	border-color: transparent;
+}
+
+.sidebar .list a {
+	border-radius: 0;
+}
+
+.container {
+	height: 100vh;
+	max-height: 100vh;
+}
+
+.content {
+	display: flex;
+	height: 100%;
+	overflow: hidden;
+	padding-bottom: 1rem;
+}
+
+.list {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 100%;
+	margin-top: 1rem;
+	border: 1px solid rgba(0, 0, 0, .125);
+	border-radius: 0.25rem;
+}
+
+.workflow {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid rgba(0, 0, 0, .125);
+	border-top: none;
+	border-bottom-left-radius: .25rem;
+	border-bottom-right-radius: .25rem;
+	/* border-top-right-radius: .25rem; */
+}
+
+.treeview {
+	overflow: hidden;
+	width: 100%;
+	max-width: 100%;
+	box-shadow: inset 0 0 15px #eee;
+	/* border: 1px solid rgba(0, 0, 0, .125); */
+	border-radius: 0.2rem;
+	height: 100%;
+	border-top-right-radius: 0;
+	border-top-left-radius: 0;
+	border-top: 1px solid rgba(0, 0, 0, .125);
+}
+
+.treeview .scroll {
+	overflow: hidden;
+	height: 100%;
+	user-select: none;
+	white-space: nowrap;
+}
+
+.treeview .scroll.now {
+	cursor: grabbing;
+}
+
+.header {
+	position:relative;
+}
+
+.header:before, .header:after {
+	display: block;
+	content:"";
+	border-bottom: 1px solid rgba(0,0,0,0.125);
+	height: 0;
+	width:100%;
+	position:absolute;
+	bottom: -1px;
+}
+
+.header:before {
+	right:100%;
+}
+
+.header:after {
+	left:100%;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eee; 
+	border-radius: .25rem;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #ccc;  
+	border-radius: .25rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #999; 
+}
+
+.resizer {
+	width: 15px;
+	cursor: e-resize;
+	position: absolute;
+	height: 80%;
+	left:100%;
+	top:0;
+	bottom: 0;
+	margin: auto;
+}
+
+.tree .main:before {
+	content: attr(data-title);
+	display: block;
+	position: absolute;
+	background: #444;
+	color:white;
+	margin-top:-1.8rem;
+	width: fit-content;
+	font-size: 0.8em;
+	padding: 0 0.3rem;
+	border-radius: .2rem;
+	opacity: 0;
+	transition: opacity .5s;
+	z-index: 999;
+}
+
+.tree .main:hover:before {
+	opacity: 1;
+}
+
+.form-control:focus, .btn:focus {
+	box-shadow: none !important;
+}
