@@ -34,7 +34,7 @@
 				<div class="d-flex"><i class="bi bi-search"></i>
 					<div class="input-group">
 						<span class="input-group-text" id="basic-addon1"><span class="material-icons">search</span></span>
-						<input type="search" class="form-control me-2" v-model="search">
+						<input type="search" class="form-control me-2" @keyup.down="listKeyDown" @keyup.up="listKeyUp" v-model="search">
 					</div>
 					<button class="btn btn-success" @click="addObject(tab)"><span class="material-icons">add</span></button>
 				</div>

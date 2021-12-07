@@ -328,6 +328,30 @@ var app = new Vue({
 				}
 			}
 		},
+		listKeyDown() {
+			if (this.filterObjects.length==0) return;
+
+			if(this.currentObject == null) {
+				this.openObject(this.filterObjects[0].id);
+			} else {
+				let index = this.filterObjects.indexOf(this.currentObject);
+				if (index < this.filterObjects.length) {
+					this.openObject(this.filterObjects[index+1].id);
+				}
+			}
+
+		},
+		listKeyUp() {
+			if (this.filterObjects.length==0) return;
+			if (this.currentObject != null) {
+				let index = this.filterObjects.indexOf(this.currentObject);
+				console.log(index);
+				if (index > 0) {
+					this.openObject(this.filterObjects[index-1].id);
+				}
+			}
+
+		}
 	},
 	computed: {
 		filterObjects() {
