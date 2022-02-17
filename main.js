@@ -44,6 +44,11 @@ var app = new Vue({
 					value: "items",
 					icon: "build"
 				},
+				{
+					label: "Понятия",
+					value: "concepts",
+					icon: "psychology"
+				},
 			]
 		}
 	},
