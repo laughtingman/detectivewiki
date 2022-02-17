@@ -12,11 +12,13 @@ var app = new Vue({
 			currentRelationDescription: "",
 			mode: "view",
 			search: "",
-			sidebarWidth: 230,
 			scroll: false,
 			resize: false,
 			scale: 1,
-
+			options: {
+				eventDates: false,
+				sidebarWidth: 230,
+			},
 			types: [{
 					label: "Персонажи",
 					value: "characters",
@@ -324,7 +326,7 @@ var app = new Vue({
 				let el = document.querySelector(".sidebar");
 				let w = e.clientX - el.getBoundingClientRect().left;
 				if (w >= 180 && w <= 500) {
-					this.sidebarWidth = w;
+					this.options.sidebarWidth = w;
 				}
 			}
 		},
@@ -355,11 +357,26 @@ var app = new Vue({
 	},
 	computed: {
 		filterObjects() {
+			let eventDates = this.options.eventDates;
 			if (this.search != "") {
-				return this.objects.filter(z => z.type == this.tab && z.title.search(new RegExp(this.search, "i")) > -1).sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
+				return this.objects.filter(z => z.type == this.tab && z.title.search(new RegExp(this.search, "i")) > -1).sort((a,b)=> sort(a,b));
 			} else {
-				return this.objects.filter(z => z.type == this.tab).sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
+				return this.objects.filter(z => z.type == this.tab).sort((a,b) => sort(a,b));
 			}
+
+			function sort (a, b) {
+				let af = a.title, bf= b.title;
+				if (a.type=='events') {
+					if (eventDates) {
+						af = a.time;
+						bf = b.time;
+					} else {
+						af = a.step;
+						bf = b.step;
+					}
+				}
+				return (af > bf) ? 1 : ((af < bf) ? -1 : 0);
+			};
 
 		},
 		filterOptions() {
@@ -381,9 +398,13 @@ var app = new Vue({
 		if (localStorage["detective_relations"]) {
 			this.relations = JSON.parse(localStorage.getItem("detective_relations"));
 		}
+		if (localStorage["detective_options"]) {
+			this.options = JSON.parse(localStorage.getItem("detective_options"));
+		}
 	},
 	updated() {
 		localStorage.setItem("detective_objects", JSON.stringify(this.objects));
 		localStorage.setItem("detective_relations", JSON.stringify(this.relations));
+		localStorage.setItem("detective_options", JSON.stringify(this.options));
 	},
 });

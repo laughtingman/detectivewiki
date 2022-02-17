@@ -336,6 +336,10 @@ a.disabled {
 	opacity: 1;
 }
 
-.form-control:focus, .btn:focus {
+.form-control:focus, .btn:focus, .form-check-input:focus {
 	box-shadow: none !important;
+}
+
+.eventDate {
+	max-width: 18rem;
 }
