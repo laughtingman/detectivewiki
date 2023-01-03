@@ -17,7 +17,7 @@
 </head>
 
 <body>
-	<div class="container d-flex flex-column pt-3" id="app" @mousemove="resizeMove" @mouseup="resizeUp">
+	<div class="container d-flex flex-column pt-3 modal-open" id="app" @mousemove="resizeMove" @mouseup="resizeUp">
 		<ul class="nav nav-tabs header">
 			<li class="nav-item" v-for="type in types">
 				<a class="nav-link" :class="{'active':tab==type.value}" @click="openTab(type.value)" href="#"><span class="material-icons">{{type.icon}}</span><span>{{type.label}}</span></a>
@@ -100,6 +100,53 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="mt-3">
+							<button class="btn btn-secondary me-2" @click="modalOpen='merge'"><span class="material-icons rotate">merge</span> Объединить...</button>
+							<button class="btn btn-secondary" @click="modalOpen='changeType';changedType=currentObject.type"><span class="material-icons">sync</span> Изменить тип</button>
+						</div>
+
+						<div class="modal" :class="{show:modalOpen=='merge'}" tabindex="-1">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title">Объединить объекты</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="modalOpen=false"></button>
+									</div>
+									<div class="modal-body">
+										<p>Объединить объект <b>{{currentObject.title}}</b> с объектом:</p>
+										<p><v-select :options="filterMergable" label="title" :reduce="item => item.id" v-model="mergedId" class="select me-2"></v-select></p>
+										<p>включая все их связи в один объект <b>{{currentObject.title}}</b>?</p>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="modalOpen=false">Отмена</button>
+										<button type="button" class="btn btn-warning" :disabled="mergedId==null" @click="merge">Объединить</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal" :class="{show:modalOpen=='changeType'}" tabindex="-1">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title">Изменить тип объекта</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="modalOpen=false"></button>
+									</div>
+									<div class="modal-body">
+										<p>Изменить тип объекта <b>{{currentObject.title}}</b> на:</p>
+										<p><select class="form-select" v-model="changedType">
+											<option v-for="type of types" :value="type.value">{{type.label}}</option>
+										</select></p>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="modalOpen=false">Отмена</button>
+										<button type="button" class="btn btn-warning" @click="changeType" :disabled="changedType==null">Изменить</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
 					</div>
 				</div>
 				<div v-show="mode=='tree'" class=" workflow">

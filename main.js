@@ -10,6 +10,8 @@ var app = new Vue({
 			currentObject: null,
 			currentRelationId: null,
 			currentRelationDescription: "",
+			mergedId: null,
+			changedType: null,
 			mode: "view",
 			search: "",
 			scroll: false,
@@ -19,6 +21,7 @@ var app = new Vue({
 				eventDates: false,
 				sidebarWidth: 230,
 			},
+			modalOpen: false,
 			types: [{
 					label: "Персонажи",
 					value: "characters",
@@ -357,7 +360,37 @@ var app = new Vue({
 					this.openObject(this.filterObjects[index-1].id);
 				}
 			}
+		},
+		merge() {
+			for (let relation of this.relations.filter(z=>z.id1==this.mergedId)) {
+				if (relation.id2 != this.currentObject.id) {
+					if (this.relations.find(z=>z.id1 == this.currentObject.id && z.id2 == relation.id2)==null) {
+						relation.id1 = this.currentObject.id;
+					}
+				}
+			}
+			for (let relation of this.relations.filter(z=>z.id2==this.mergedId)) {
+				if (relation.id1 != this.currentObject.id) {
+					if (this.relations.find(z=>z.id2 == this.currentObject.id && z.id1 == relation.id1)==null) {
+						relation.id2 = this.currentObject.id;
+					}
+				}
+			}
 
+			this.relations = this.relations.filter(z=>z.id1!= this.mergedId && z.id2 != this.mergedId);
+
+			let merged = this.getObject(this.mergedId);
+			this.currentObject.description += "\n" +  merged.description;
+
+			this.objects = this.objects.filter(z=>z.id != this.mergedId);
+			this.mergedId = null;
+			this.modalOpen = false;
+		},
+		changeType() {
+			this.tab = this.changedType;
+			this.currentObject.type = this.changedType;
+			this.changedType = null;
+			this.modalOpen = false;
 		}
 	},
 	computed: {
@@ -394,7 +427,10 @@ var app = new Vue({
 				}
 			}
 			return this.objects.filter(z => ids.indexOf(z.id) == -1).sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
-		}
+		},
+		filterMergable() {
+			return this.objects.filter(z => z.id != this.currentObject.id).sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
+		},
 	},
 	mounted() {
 		if (localStorage["detective_objects"]) {

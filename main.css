@@ -1,5 +1,5 @@
 body, html {
-	overflow: hidden;
+	overflow: hidden !important;
 	user-select: none;
 }
 
@@ -10,6 +10,10 @@ h5:only-child {
 .material-icons {
 	font-size: 1em;
 	vertical-align: -0.15em;
+}
+
+.material-icons.rotate {
+	transform: rotate(90deg);
 }
 
 .material-icons:not(:last-child) {
@@ -342,4 +346,10 @@ a.disabled {
 
 .eventDate {
 	max-width: 18rem;
+}
+
+.modal.show {
+	display: block;
+	background-color: rgba(0, 0, 0, .8);
+	backdrop-filter: blur(10px);
 }
