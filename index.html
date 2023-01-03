@@ -66,8 +66,8 @@
 								<button class="btn btn-danger" @click="remObject" tabindex="-1"><span class="material-icons">delete</span></button>
 							</div>
 						</div>
-						<div class="fromgroup">
-							<div class="input-group eventDate" v-if="currentObject.type=='events'">
+						<div class="fromgroup mt-2" v-if="currentObject.type=='events'">
+							<div class="input-group eventDate">
 								<div class="input-group-text align-content-center">
 									<div class="form-check form-switch">
 										<input class="form-check-input float-none" type="checkbox" value="true" v-model="options.eventDates" title="порядок по хронологии / точные даты">
@@ -84,7 +84,11 @@
 						<h3 class="mt-3">Связи</h3>
 
 						<div class="d-flex mt-2">
-							<v-select :options="filterOptions" label="title" :reduce="item => item.id" v-model="currentRelationId" class="select me-2"></v-select>
+							<v-select :options="filterOptions" label="title" :reduce="item => item.id" v-model="currentRelationId" class="select me-2">
+								<template v-slot:option="option">
+									<span class="material-icons">{{getIcon(option.type)}}</span> {{option.title}}
+								</template>
+							</v-select>
 							<input type="text" class="form-control me-2" v-model="currentRelationDescription" placeholder="характер связи" v-on:keyup.enter="addRelation"></input>
 							<button class="btn btn-success" @click="addRelation" :disabled="currentRelationId==null"><span class="material-icons">add</span></button>
 						</div>
@@ -115,7 +119,13 @@
 									</div>
 									<div class="modal-body">
 										<p>Объединить объект <b>{{currentObject.title}}</b> с объектом:</p>
-										<p><v-select :options="filterMergable" label="title" :reduce="item => item.id" v-model="mergedId" class="select me-2"></v-select></p>
+										<p>
+											<v-select :options="filterMergable" label="title" :reduce="item => item.id" v-model="mergedId" class="select me-2">
+												<template v-slot:option="option">
+													<span class="material-icons">{{getIcon(option.type)}}</span> {{option.title}}
+												</template>
+											</v-select>
+										</p>
 										<p>включая все их связи в один объект <b>{{currentObject.title}}</b>?</p>
 									</div>
 									<div class="modal-footer">
@@ -136,8 +146,8 @@
 									<div class="modal-body">
 										<p>Изменить тип объекта <b>{{currentObject.title}}</b> на:</p>
 										<p><select class="form-select" v-model="changedType">
-											<option v-for="type of types" :value="type.value">{{type.label}}</option>
-										</select></p>
+												<option v-for="type of types" :value="type.value">{{type.label}}</option>
+											</select></p>
 									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="modalOpen=false">Отмена</button>

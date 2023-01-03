@@ -135,6 +135,11 @@ var app = new Vue({
 		getObject(id) {
 			return this.objects.find(z => z.id == id);
 		},
+
+		getIcon(type) {
+			return this.types.find(z=>z.value == type).icon;
+		},
+		
 		remRelation(id1, id2) {
 			if (confirm("Точно удалить связь?"))
 				this.relations = this.relations.filter(z => !(z.id1 == id1 && z.id2 == id2 || z.id2 == id1 && z.id1 == id2));
