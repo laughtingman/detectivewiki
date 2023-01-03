@@ -17,10 +17,10 @@
 </head>
 
 <body>
-	<div class="container d-flex flex-column pt-3 modal-open" id="app" @mousemove="resizeMove" @mouseup="resizeUp">
+	<div class="container-fluid d-flex flex-column pt-3 modal-open" id="app" @mousemove="resizeMove" @mouseup="resizeUp">
 		<ul class="nav nav-tabs header">
 			<li class="nav-item" v-for="type in types">
-				<a class="nav-link" :class="{'active':tab==type.value}" @click="openTab(type.value)" href="#"><span class="material-icons">{{type.icon}}</span><span>{{type.label}}</span></a>
+				<a class="nav-link" :class="{'active':tab==type.value}" @click="openTab(type.value)" href="#"><span class="material-icons">{{type.icon}}</span><span class="d-none d-lg-inline">{{type.label}}</span></a>
 			</li>
 			<div class="ms-auto">
 				<button class="btn btn-danger btn-sm" @click="clearAll()"><span class="material-icons" title="Удалить всё">delete</span></button>
@@ -63,7 +63,9 @@
 						<div class="fromgroup">
 							<div class="d-flex">
 								<input type="text" id="name" class="form-control me-2" v-model="currentObject.title" id="title" placeholder="имя">
-								<button class="btn btn-danger" @click="remObject" tabindex="-1"><span class="material-icons">delete</span></button>
+								<button class="btn btn-danger me-2" title="Удалить объект" @click="remObject" tabindex="-1"><span class="material-icons">delete</span></button>
+								<button class="btn btn-warning me-2" title="Объединить..." @click="modalOpen='merge'"><span class="material-icons rotate">merge</span></button>
+								<button class="btn btn-warning" title="Изменить тип" @click="modalOpen='changeType';changedType=currentObject.type"><span class="material-icons">sync</span></button>
 							</div>
 						</div>
 						<div class="fromgroup mt-2" v-if="currentObject.type=='events'">
@@ -102,11 +104,6 @@
 									<button class="btn btn-danger btn-sm" @click="remRelation(relation.id1, relation.id2)"><span class="material-icons">delete</span></button>
 								</div>
 							</div>
-						</div>
-
-						<div class="mt-3">
-							<button class="btn btn-secondary me-2" @click="modalOpen='merge'"><span class="material-icons rotate">merge</span> Объединить...</button>
-							<button class="btn btn-secondary" @click="modalOpen='changeType';changedType=currentObject.type"><span class="material-icons">sync</span> Изменить тип</button>
 						</div>
 
 						<div class="modal" :class="{show:modalOpen=='merge'}" tabindex="-1">
@@ -174,7 +171,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-9 text-center" v-else>не выбрано</div>
+			<div class="text-center" v-else>не выбрано</div>
 		</div>
 	</div>
 
