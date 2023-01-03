@@ -356,3 +356,36 @@ a.disabled {
 	background-color: rgba(0, 0, 0, .8);
 	backdrop-filter: blur(10px);
 }
+
+.vs__selected-options {
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: calc(100% - 41px);
+}
+
+.vs__selected {
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.v-select {
+	width: 100%;
+  min-width:160px;
+	max-width: 100%;
+}
+
+.vs__dropdown-menu {
+	overflow-x: hidden;
+	max-height: 120px;
+}
+
+.vs__dropdown-toggle {
+  justify-content: space-between;
+}
+
+.vs__clear {
+	display: flex;
+}
