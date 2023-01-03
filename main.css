@@ -389,3 +389,13 @@ a.disabled {
 .vs__clear {
 	display: flex;
 }
+
+.workflow.fullScreen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-color: white;
+	height: 100%;
+	z-index: 100;
+}

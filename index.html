@@ -17,7 +17,7 @@
 </head>
 
 <body>
-	<div class="container-fluid d-flex flex-column pt-3 modal-open" id="app" @mousemove="resizeMove" @mouseup="resizeUp">
+	<div class="container-fluid d-flex flex-column pt-3 modal-open" id="app" @mousemove="resizeMove" @mouseup="resizeUp" @keydown.esc="fullScreen=false">
 		<ul class="nav nav-tabs header">
 			<li class="nav-item" v-for="type in types">
 				<a class="nav-link" :class="{'active':tab==type.value}" @click="openTab(type.value)" href="#"><span class="material-icons">{{type.icon}}</span><span class="d-none d-lg-inline">{{type.label}}</span></a>
@@ -155,10 +155,12 @@
 
 					</div>
 				</div>
-				<div v-show="mode=='tree'" class=" workflow">
+				<div v-show="mode=='tree'" class="workflow" :class="{fullScreen:fullScreen}">
 					<div class="d-flex justify-content-between align-items-center">
 						<h3 class="ms-3">{{currentObject.title}}</h3>
 						<div class="m-3 text-end">
+							<botton class="btn btn-secondary btn-sm me-1" @click="fullScreen=false" v-if="fullScreen"><span class="material-icons">close_fullscreen</span></botton>
+							<botton class="btn btn-secondary btn-sm me-1" @click="fullScreen=true" title="на полный экран" v-else><span class="material-icons">open_in_full</span></botton>
 							<button class="btn btn-secondary btn-sm me-1" @click="zoomOut"><span class="material-icons">zoom_in</span> {{Math.round(scale*100)}}%</button>
 							<button class="btn btn-secondary btn-sm me-1" @click="expandAll"><span class="material-icons" title="развернуть всё">library_add_check</span></button>
 							<button class="btn btn-secondary btn-sm" @click="collapseAll" title="свернуть всё"><span class="material-icons">indeterminate_check_box</span></button>
