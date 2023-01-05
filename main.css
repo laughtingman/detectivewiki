@@ -352,8 +352,7 @@ a.disabled {
 }
 
 .modal.show {
-	display: block;
-	background-color: rgba(0, 0, 0, .8);
+	background-color: rgba(255, 255, 255, .5);
 	backdrop-filter: blur(10px);
 }
 

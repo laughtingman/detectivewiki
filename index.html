@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="https://bootswatch.com/5/spacelab/bootstrap.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue-select@3.11.2/dist/vue-select.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-select@3.11.2/dist/vue-select.css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="main.css">
@@ -23,7 +24,26 @@
 				<a class="nav-link" :class="{'active':tab==type.value}" @click="openTab(type.value)" href="#"><span class="material-icons">{{type.icon}}</span><span class="d-none d-lg-inline">{{type.label}}</span></a>
 			</li>
 			<div class="ms-auto">
-				<button class="btn btn-danger btn-sm" @click="clearAll()"><span class="material-icons" title="Удалить всё">delete</span></button>
+				<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#clearAllModal"><span class="material-icons" title="Удалить всё">delete</span></button>
+
+				<div class="modal fade" id="clearAllModal" tabindex="-1">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Очистить все записи?</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+							</div>
+							<div class="modal-body">
+								Вы уверены, что хотите полностью очистить все записи? Вернуть обратно будет нельзя!
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+								<button type="button" class="btn btn-danger" @click="clearAll()" data-bs-dismiss="modal">Очистить все</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<button class="btn btn-warning btn-sm" @click="openFile()" title="Открыть файл"><span class="material-icons">snippet_folder</span></button>
 				<button class="btn btn-success btn-sm" @click="saveToFile()" title="Сохранить в файл"><span class="material-icons">save</span></button>
 			</div>
@@ -63,12 +83,84 @@
 						<div class="fromgroup">
 							<div class="d-flex">
 								<input type="text" id="name" class="form-control me-2" v-model="currentObject.title" id="title" placeholder="имя">
-								<button class="btn btn-danger me-2" title="Удалить объект" @click="remObject" tabindex="-1"><span class="material-icons">delete</span></button>
-								<button class="btn btn-warning me-2" title="Объединить..." @click="modalOpen='merge'"><span class="material-icons rotate">merge</span></button>
-								<button class="btn btn-warning" title="Изменить тип" @click="modalOpen='changeType';changedType=currentObject.type"><span class="material-icons">sync</span></button>
+
+								<button class="btn btn-danger me-2" title="Удалить объект" tabindex="-1" data-bs-toggle="modal" data-bs-target="#remObjectModal"><span class="material-icons">delete</span></button>
+
+								<div class="modal fade" id="remObjectModal" tabindex="-1">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLabel">Удалить объект?</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+											</div>
+											<div class="modal-body">
+												<b><span class="material-icons">{{getIcon(currentObject.type)}}</span>{{currentObject.title}}</b>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+												<button type="button" class="btn btn-danger" @click="remObject" data-bs-dismiss="modal">Удалить</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<button class="btn btn-warning me-2" title="Объединить..." data-bs-toggle="modal" data-bs-target="#mergeObjectsModal"><span class="material-icons rotate">merge</span></button>
+
+								<div class="modal fade" id="mergeObjectsModal" tabindex="-1">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLabel">Объединить объекты?</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+											</div>
+											<div class="modal-body">
+												<p>Объединить объект <b><span class="material-icons">{{getIcon(currentObject.type)}}</span>{{currentObject.title}}</b> с объектом:</p>
+												<p>
+													<v-select :options="filterMergable" label="title" :reduce="item => item.id" v-model="mergedId" class="select me-2">
+														<template v-slot:option="option">
+															<span class="material-icons">{{getIcon(option.type)}}</span>{{option.title}}
+														</template>
+													</v-select>
+												</p>
+												<p>включая все их связи в один объект <b><span class="material-icons">{{getIcon(currentObject.type)}}</span>{{currentObject.title}}</b>?</p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+												<button type="button" class="btn btn-warning" data-bs-dismiss="modal" @click="merge" :disabled="mergedId==null">Объединить</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+								<button class="btn btn-warning" title="Изменить тип" data-bs-toggle="modal" data-bs-target="#changeTypeModal" @click="changedType=currentObject.type"><span class="material-icons">sync</span></button>
+
+								<div class="modal fade" id="changeTypeModal" tabindex="-1">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLabel">Изменить тип объекта?</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+											</div>
+											<div class="modal-body">
+												<p>Изменить тип объекта <b>{{currentObject.title}}</b> на:</p>
+												<p>
+													<select class="form-select" v-model="changedType">
+														<option v-for="type of types" :value="type.value">{{type.label}}</option>
+													</select>
+												</p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+												<button type="button" class="btn btn-warning" data-bs-dismiss="modal" @click="changeType" :disabled="changedType==null">Изменить</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
 							</div>
 						</div>
-						<div class="fromgroup mt-2" v-if="currentObject.type=='events'">
+						<div class="fromgroup mt-2 d-flex align-items-center" v-if="currentObject.type=='events'">
 							<div class="input-group eventDate">
 								<div class="input-group-text align-content-center">
 									<div class="form-check form-switch">
@@ -76,8 +168,9 @@
 									</div>
 								</div>
 								<input v-if="options.eventDates" id="datetime" type="datetime-local" class="form-control datetime me-2" v-model="currentObject.time">
-								<input v-else type="number" step="1" class="form-control me-2" v-model.number="currentObject.step">
+								<input v-else type="number" id="datetime" step="1" class="form-control me-2" v-model.number="currentObject.step">
 							</div>
+							<label for="datetime">Дата или относительное время события <sup>beta</sup></label>
 						</div>
 						<div class="fromgroup mt-2">
 							<textarea class="form-control" v-model="currentObject.description" id="desc" placeholder="описание"></textarea>
@@ -100,55 +193,59 @@
 								<div class="w-50 me-2"><a href="#" @click="openObject(relation.id2)"><span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}}</a></div>
 								<div class="w-100">{{relation.description}}</div>
 								<div class="d-inline-flex align-items-start">
-									<button class="btn btn-warning btn-sm me-2" @click="editRelation(relation.id1, relation.id2)"><span class="material-icons">edit</span></button>
-									<button class="btn btn-danger btn-sm" @click="remRelation(relation.id1, relation.id2)"><span class="material-icons">delete</span></button>
-								</div>
-							</div>
-						</div>
+									<button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" :data-bs-target="'#updateRelation'+relation.id2" @click="editRelation(relation.id1, relation.id2)"><span class="material-icons">edit</span></button>
 
-						<div class="modal" :class="{show:modalOpen=='merge'}" tabindex="-1">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title">Объединить объекты</h5>
-										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="modalOpen=false"></button>
-									</div>
-									<div class="modal-body">
-										<p>Объединить объект <b>{{currentObject.title}}</b> с объектом:</p>
-										<p>
-											<v-select :options="filterMergable" label="title" :reduce="item => item.id" v-model="mergedId" class="select me-2">
-												<template v-slot:option="option">
-													<span class="material-icons">{{getIcon(option.type)}}</span> {{option.title}}
-												</template>
-											</v-select>
-										</p>
-										<p>включая все их связи в один объект <b>{{currentObject.title}}</b>?</p>
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="modalOpen=false">Отмена</button>
-										<button type="button" class="btn btn-warning" :disabled="mergedId==null" @click="merge">Объединить</button>
-									</div>
-								</div>
-							</div>
-						</div>
+									<div class="modal fade" :id="'updateRelation'+relation.id2" tabindex="-1">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="exampleModalLabel">Обновить связи?</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+												</div>
+												<div class="modal-body">
+													<label class="form-group w-100">
+														<span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}} &rarr; 
+														<span class="material-icons me-1">{{getIcon(currentObject.type)}}</span>{{currentObject.title}}
 
-						<div class="modal" :class="{show:modalOpen=='changeType'}" tabindex="-1">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title">Изменить тип объекта</h5>
-										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="modalOpen=false"></button>
+														<textarea class="form-control" v-model="directRelationDescription"></textarea>
+													</label>
+													<label class="form-group w-100">
+
+														<span class="material-icons me-1">{{getIcon(currentObject.type)}}</span>{{currentObject.title}} &rarr; 
+														<span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}}
+														
+														<textarea class="form-control" v-model="reverseRelationDescription"></textarea>
+													</label>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+													<button type="button" class="btn btn-warning" @click="updateRelation(relation.id1, relation.id2)" data-bs-dismiss="modal">Обновить</button>
+												</div>
+											</div>
+										</div>
 									</div>
-									<div class="modal-body">
-										<p>Изменить тип объекта <b>{{currentObject.title}}</b> на:</p>
-										<p><select class="form-select" v-model="changedType">
-												<option v-for="type of types" :value="type.value">{{type.label}}</option>
-											</select></p>
+
+
+									<button class="btn btn-danger btn-sm" data-bs-toggle="modal" :data-bs-target="'#remRelation'+relation.id2"><span class="material-icons">delete</span></button>
+
+									<div class="modal fade" :id="'remRelation'+relation.id2" tabindex="-1">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="exampleModalLabel">Удалить связи?</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+												</div>
+												<div class="modal-body">
+													<span class="material-icons me-1">{{getIcon(currentObject.type)}}</span>{{currentObject.title}} &rlarr; <span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}}
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+													<button type="button" class="btn btn-danger" @click="remRelation(relation.id1, relation.id2)" data-bs-dismiss="modal">Удалить</button>
+												</div>
+											</div>
+										</div>
 									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="modalOpen=false">Отмена</button>
-										<button type="button" class="btn btn-warning" @click="changeType" :disabled="changedType==null">Изменить</button>
-									</div>
+
 								</div>
 							</div>
 						</div>
@@ -173,7 +270,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="text-center" v-else>не выбрано</div>
+			<div class="text-center w-100" v-else>не выбрано</div>
 		</div>
 	</div>
 

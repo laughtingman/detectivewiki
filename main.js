@@ -10,6 +10,8 @@ var app = new Vue({
 			currentObject: null,
 			currentRelationId: null,
 			currentRelationDescription: "",
+			directRelationDescription: "",
+			reverseRelationDescription: "",
 			mergedId: null,
 			changedType: null,
 			mode: "view",
@@ -22,7 +24,6 @@ var app = new Vue({
 				eventDates: false,
 				sidebarWidth: 230,
 			},
-			modalOpen: false,
 			types: [{
 					label: "Персонажи",
 					value: "characters",
@@ -76,11 +77,9 @@ var app = new Vue({
 			});
 		},
 		remObject() {
-			if (confirm("Точно удалить запись и все связи?")) {
 				this.relations = this.relations.filter(z => z.id1 != this.currentObject.id && z.id2 != this.currentObject.id);
 				this.objects = this.objects.filter(z => z.id != this.currentObject.id);
 				this.currentObject = null;
-			}
 		},
 		openTab(tab) {
 			this.tab = tab;
@@ -142,18 +141,15 @@ var app = new Vue({
 		},
 
 		remRelation(id1, id2) {
-			if (confirm("Точно удалить связь?"))
 				this.relations = this.relations.filter(z => !(z.id1 == id1 && z.id2 == id2 || z.id2 == id1 && z.id1 == id2));
 		},
 		editRelation(id1, id2) {
-			let relation = this.relations.find(z => z.id1 == id1 && z.id2 == id2);
-			let desc = prompt("Описание", relation.description);
-
-			if (desc != null) {
-				relation.description = desc;
-				if (confirm("Обновить обратную связь?"))
-					this.relations.find(z => z.id2 == id1 && z.id1 == id2).description = desc;
-			}
+			this.directRelationDescription = this.relations.find(z => z.id1 == id1 && z.id2 == id2).description;
+			this.reverseRelationDescription = this.relations.find(z => z.id2 == id1 && z.id1 == id2).description;
+		},
+		updateRelation(id1, id2) {
+			this.relations.find(z => z.id1 == id1 && z.id2 == id2).description = this.directRelationDescription;
+			this.relations.find(z => z.id2 == id1 && z.id1 == id2).description = this.reverseRelationDescription;
 		},
 		filterRelations(id, type) {
 			return this.relations.filter(z => z.id1 == id && z.type == type);
@@ -322,11 +318,9 @@ var app = new Vue({
 			download(JSON.stringify(data), 'detective.json', 'text/plain');
 		},
 		clearAll() {
-			if (confirm("Точно удалить всё?!")) {
 				this.objects = [];
 				this.relatinos = [];
 				this.currentObject = null;
-			}
 		},
 		resizeDown(e) {
 			this.resize = true;
