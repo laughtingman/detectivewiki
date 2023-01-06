@@ -339,6 +339,14 @@ a.disabled {
 	z-index: 999;
 }
 
+.tree li>div:focus {
+	box-shadow: 0 0 10px var(--bs-link-color);
+}
+
+.tree .sub a {
+	text-decoration-style: dashed;
+}
+
 .tree .main:hover:before {
 	opacity: 1;
 }

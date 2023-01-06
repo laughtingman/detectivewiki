@@ -107,8 +107,17 @@ var app = new Vue({
 
 			Vue.nextTick(() => {
 				this.tree = this.makeTree(id);
+				this.sctollToLi("l"+id);
 			});
 		},
+
+		sctollToLi(id) {
+			console.log(id);
+			let el = document.getElementById(id);
+			el.scrollIntoView({behavior:"smooth", block:"center", inline: "center"});
+			el.focus({preventScroll: true});
+		},
+		
 		addRelation() {
 
 			if (this.currentRelationId == null) return;
@@ -179,7 +188,9 @@ var app = new Vue({
 
 				if (visited.indexOf(objId) != -1) {
 
-					li.innerHTML = `<div class="sub"><span class='material-icons'>${icon}</span>&nbsp;${obj.title}</div>`;
+					li.innerHTML = `<div class="sub">
+						<a href="#" onclick="app.sctollToLi('l${objId}'); return false;"><span class='material-icons me-1'>${icon}</span>${obj.title}</a>
+					</div>`;
 					queueItem.pid.appendChild(li);
 					continue;
 				}
@@ -187,7 +198,7 @@ var app = new Vue({
 				let cls = (id == objId) ? "disabled" : "";
 
 				li.innerHTML = `
-										<div class="main" data-title="${queueItem.title}"><label for="${objId}"></label><a class="${cls}" href="#" onclick='app.openObject("${objId}")'><span class='material-icons me-1'>${icon}</span>${obj.title}</a></div>
+										<div class="main" id="l${objId}" data-title="${queueItem.title}" tabindex="0"><label for="${objId}"></label><a class="${cls}" href="#l${objId}" onclick='app.openObject("${objId}"); return false;'><span class='material-icons me-1'>${icon}</span>${obj.title}</a></div>
 										<input type="checkbox" id="${objId}" checked>`;
 
 				let ul = document.createElement("ul");
