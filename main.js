@@ -112,12 +112,33 @@ var app = new Vue({
 		},
 
 		sctollToLi(id) {
-			console.log(id);
 			let el = document.getElementById(id);
-			el.scrollIntoView({behavior:"smooth", block:"center", inline: "center"});
+			scroller = document.querySelector(".treeview .scroll");
+			offsets = getOffsets(el,"scroll");
+			scroller.scroll(
+				{
+					left: (offsets.offsetLeft -40) * this.scale,
+					top: (offsets.offsetTop -40) * this.scale,
+					behavior: 'smooth'
+				}
+			);
 			el.focus({preventScroll: true});
+			document.querySelector(".content").scrollY = 0;
+
+			function getOffsets(el, cls) {
+				let parent = el, offsetTop = 0, offsetLeft =0;
+				while (true) {
+					offsetTop += parent.offsetTop;
+					offsetLeft += parent.offsetLeft;
+					parent = parent.parentNode;
+					if (parent.classList.contains(cls)) {
+						break;
+					}
+				}
+				return {offsetTop:offsetTop, offsetLeft:offsetLeft};
+			}
 		},
-		
+
 		addRelation() {
 
 			if (this.currentRelationId == null) return;

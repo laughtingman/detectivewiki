@@ -19,7 +19,7 @@
 
 <body>
 	<div class="container-fluid d-flex flex-column pt-3 modal-open" id="app" @mousemove="resizeMove" @mouseup="resizeUp" @keydown.esc="fullScreen=false">
-		<ul class="nav nav-tabs header">
+		<ul class="nav nav-tabs header mb-4">
 			<li class="nav-item" v-for="type in types">
 				<a class="nav-link" :class="{'active':tab==type.value}" @click="openTab(type.value)" href="#"><span class="material-icons">{{type.icon}}</span><span class="d-none d-lg-inline">{{type.label}}</span></a>
 			</li>
@@ -49,7 +49,7 @@
 			</div>
 		</ul>
 
-		<div class="d-flex mt-4 flex-gap-2 content">
+		<div class="d-flex flex-gap-2 content">
 			<div class="sidebar" :style="{width:options.sidebarWidth+'px',minWidth:options.sidebarWidth+'px'}">
 				<div class="d-flex"><i class="bi bi-search"></i>
 					<div class="input-group">
@@ -72,10 +72,10 @@
 			<div class="mainbar" v-if="currentObject != null" style="overflow-x: hidden;">
 				<ul class="nav nav-tabs">
 					<li class="nav-item">
-						<a class="nav-link" :class="{'active':mode=='view'}" @click="changeMode('view')" href="#"><span class="material-icons">edit</span><span>Редактор</span></a>
+						<a class="nav-link" :class="{'active':mode=='view'}" @click="changeMode('view')" href="#"><span class="material-icons me-1">edit</span><span>Редактор</span></a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" :class="{'active':mode=='tree'}" @click="changeMode('tree')" href="#"><span class="material-icons">account_tree</span><span>Дерево</span></a>
+						<a class="nav-link" :class="{'active':mode=='tree'}" @click="changeMode('tree')" href="#"><span class="material-icons me-1">account_tree</span><span>Дерево</span></a>
 					</li>
 				</ul>
 				<div class="view workflow" v-show="mode=='view'">

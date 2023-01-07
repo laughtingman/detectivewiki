@@ -16,10 +16,6 @@ h5:only-child {
 	transform: rotate(90deg);
 }
 
-.material-icons:not(:last-child) {
-	margin-right: 0.5em;
-}
-
 .select {
 	min-width: 30%;
 }
@@ -179,6 +175,9 @@ a.disabled {
 
 .container-fluid {
 	height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
 }
 
 .sidebar,
@@ -214,16 +213,16 @@ a.disabled {
 	border-radius: 0;
 }
 
-.container {
+.container-fluid {
 	height: 100vh;
 	max-height: 100vh;
+	padding-bottom: 1rem;
 }
 
 .content {
 	display: flex;
 	height: 100%;
 	overflow: hidden;
-	padding-bottom: 1rem;
 }
 
 .list {
@@ -266,6 +265,7 @@ a.disabled {
 	height: 100%;
 	user-select: none;
 	white-space: nowrap;
+	position: relative;
 }
 
 .treeview .scroll.now {
