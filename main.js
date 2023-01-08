@@ -483,6 +483,12 @@ var app = new Vue({
 		if (localStorage["detective_options"]) {
 			this.options = JSON.parse(localStorage.getItem("detective_options"));
 		}
+
+		document.addEventListener('keyup', (event) => {
+			if (event.key === "Escape") {
+					this.fullScreen = false;
+			}
+		});
 	},
 	updated() {
 		localStorage.setItem("detective_objects", JSON.stringify(this.objects));

@@ -18,7 +18,7 @@
 </head>
 
 <body>
-	<div class="container-fluid d-flex flex-column pt-3 modal-open" id="app" @mousemove="resizeMove" @mouseup="resizeUp" @keydown.esc="fullScreen=false">
+	<div class="container-fluid d-flex flex-column pt-3 modal-open" id="app" @mousemove="resizeMove" @mouseup="resizeUp">
 		<ul class="nav nav-tabs header mb-4">
 			<li class="nav-item" v-for="type in types">
 				<a class="nav-link" :class="{'active':tab==type.value}" @click.prevent="openTab(type.value)" href="#"><span class="material-icons">{{type.icon}}</span><span class="ms-1 d-none d-lg-inline">{{type.label}}</span></a>
