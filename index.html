@@ -118,7 +118,7 @@
 												<p>
 													<v-select :options="filterMergable" label="title" :reduce="item => item.id" v-model="mergedId" class="select me-2">
 														<template v-slot:option="option">
-															<span class="material-icons">{{getIcon(option.type)}}</span>{{option.title}}
+															<span class="material-icons me-1">{{getIcon(option.type)}}</span>{{option.title}}
 														</template>
 													</v-select>
 												</p>
