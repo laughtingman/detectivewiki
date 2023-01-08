@@ -175,9 +175,8 @@ a.disabled {
 
 .container-fluid {
 	height: 100vh;
-	position: fixed;
-	top: 0;
-	left: 0;
+	min-height: 100vh;
+	max-height: 100vh;
 }
 
 .sidebar,
@@ -207,9 +206,9 @@ a.disabled {
 
 .sidebar .list a {
 	border-color: transparent;
-}
-
-.sidebar .list a {
+	text-overflow: ellipsis;
+  overflow: hidden;
+	white-space: nowrap;
 	border-radius: 0;
 }
 
@@ -231,6 +230,11 @@ a.disabled {
 	height: 100%;
 	margin-top: 1rem;
 	border: 1px solid rgba(0, 0, 0, .125);
+	border-radius: 0.25rem;
+}
+
+.list-group {
+	overflow: hidden;
 	border-radius: 0.25rem;
 }
 

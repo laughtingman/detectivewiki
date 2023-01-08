@@ -21,7 +21,7 @@
 	<div class="container-fluid d-flex flex-column pt-3 modal-open" id="app" @mousemove="resizeMove" @mouseup="resizeUp" @keydown.esc="fullScreen=false">
 		<ul class="nav nav-tabs header mb-4">
 			<li class="nav-item" v-for="type in types">
-				<a class="nav-link" :class="{'active':tab==type.value}" @click="openTab(type.value)" href="#"><span class="material-icons">{{type.icon}}</span><span class="d-none d-lg-inline">{{type.label}}</span></a>
+				<a class="nav-link" :class="{'active':tab==type.value}" @click="openTab(type.value)" href="#"><span class="material-icons">{{type.icon}}</span><span class="ms-1 d-none d-lg-inline">{{type.label}}</span></a>
 			</li>
 			<div class="ms-auto">
 				<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#clearAllModal"><span class="material-icons" title="Удалить всё">delete</span></button>
