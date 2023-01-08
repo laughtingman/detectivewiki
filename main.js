@@ -218,7 +218,7 @@ var app = new Vue({
 
 				if (visited.indexOf(objId) != -1) {
 
-					li.innerHTML = `<div class="sub">
+					li.innerHTML = `<div class="sub" data-title="${queueItem.title}">
 						<a href="#" onclick="app.sctollToLi('l${objId}'); return false;"><span class='material-icons me-1'>${icon}</span>${obj.title}</a>
 					</div>`;
 					queueItem.pid.appendChild(li);

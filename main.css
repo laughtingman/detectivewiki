@@ -67,6 +67,7 @@ html {
 	color: #222;
 	display: inline-block;
 	border-radius: 0.2rem;
+	margin: 0.5rem 0;
 }
 
 .tree li>div.sub {
@@ -77,10 +78,6 @@ html {
 	display: flex;
 	align-items: center;
 	margin-left: 24px;
-}
-
-.tree.horizontal li {
-	padding: 6px 0;
 }
 
 .tree.horizontal li:before {
@@ -327,7 +324,7 @@ a.disabled {
 	margin: auto;
 }
 
-.tree .main:before {
+.tree div:before {
 	content: attr(data-title);
 	display: block;
 	position: absolute;
@@ -341,6 +338,7 @@ a.disabled {
 	opacity: 0;
 	transition: opacity .5s;
 	z-index: 999;
+	pointer-events: none;
 }
 
 .tree li>div:focus {
@@ -351,7 +349,7 @@ a.disabled {
 	text-decoration-style: dashed;
 }
 
-.tree .main:hover:before {
+.tree div:hover:before {
 	opacity: 1;
 }
 
