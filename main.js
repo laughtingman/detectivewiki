@@ -95,7 +95,7 @@ var app = new Vue({
 			});
 
 		},
-		openObject(id) {
+		openObject(id, scrollMenu=true) {
 			let obj = this.objects.find(z => z.id == id);
 
 			if (this.tab != obj.type)
@@ -108,6 +108,7 @@ var app = new Vue({
 			Vue.nextTick(() => {
 				this.tree = this.makeTree(id);
 				this.sctollToLi("l"+id);
+				if (scrollMenu) this.scrollMenu();
 			});
 		},
 
@@ -117,8 +118,8 @@ var app = new Vue({
 			offsets = getOffsets(el,"scroll");
 			scroller.scroll(
 				{
-					left: (offsets.offsetLeft -40) * this.scale,
-					top: (offsets.offsetTop -40) * this.scale,
+					left: (offsets.offsetLeft - scroller.clientWidth/2 + el.clientWidth/2) * this.scale,
+					top: (offsets.offsetTop - scroller.clientHeight/2 + el.clientHeight/2) * this.scale,
 					behavior: 'smooth'
 				}
 			);
@@ -136,6 +137,14 @@ var app = new Vue({
 					}
 				}
 				return {offsetTop:offsetTop, offsetLeft:offsetLeft};
+			}
+		},
+
+		scrollMenu() {
+			let menu = document.querySelector(".sidebar .list");
+			let selected = menu.querySelector(".active");
+			if (selected) {
+				menu.scrollTo({top:selected.offsetTop, behavior:"smooth"});
 			}
 		},
 

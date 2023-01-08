@@ -236,6 +236,7 @@ a.disabled {
 .list-group {
 	overflow: hidden;
 	border-radius: 0.25rem;
+	position: relative;
 }
 
 .workflow {
@@ -344,7 +345,7 @@ a.disabled {
 }
 
 .tree li>div:focus {
-	box-shadow: 0 0 10px var(--bs-link-color);
+	outline: 2px solid var(--bs-red);
 }
 
 .tree .sub a {
@@ -409,4 +410,10 @@ a.disabled {
 	background-color: white;
 	height: 100%;
 	z-index: 100;
+}
+
+.workflow h3 {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 }

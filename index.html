@@ -21,7 +21,7 @@
 	<div class="container-fluid d-flex flex-column pt-3 modal-open" id="app" @mousemove="resizeMove" @mouseup="resizeUp" @keydown.esc="fullScreen=false">
 		<ul class="nav nav-tabs header mb-4">
 			<li class="nav-item" v-for="type in types">
-				<a class="nav-link" :class="{'active':tab==type.value}" @click="openTab(type.value)" href="#"><span class="material-icons">{{type.icon}}</span><span class="ms-1 d-none d-lg-inline">{{type.label}}</span></a>
+				<a class="nav-link" :class="{'active':tab==type.value}" @click.prevent="openTab(type.value)" href="#"><span class="material-icons">{{type.icon}}</span><span class="ms-1 d-none d-lg-inline">{{type.label}}</span></a>
 			</li>
 			<div class="ms-auto">
 				<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#clearAllModal"><span class="material-icons" title="Удалить всё">delete</span></button>
@@ -60,7 +60,7 @@
 				</div>
 				<div class="list">
 					<div class="list-group">
-						<a href="#" class="list-group-item list-group-item-action" v-for="item of filterObjects" :class="{'active':item==currentObject}" @click="openObject(item.id)">
+						<a href="#" :id="'m'+item.id" class="list-group-item list-group-item-action" v-for="item of filterObjects" :class="{'active':item==currentObject}" @click.prevent="openObject(item.id, false)">
 							<span v-if="item.title.length">{{item.title}}</span>
 							<span v-else>без имени</span>
 						</a>
@@ -72,10 +72,10 @@
 			<div class="mainbar" v-if="currentObject != null" style="overflow-x: hidden;">
 				<ul class="nav nav-tabs">
 					<li class="nav-item">
-						<a class="nav-link" :class="{'active':mode=='view'}" @click="changeMode('view')" href="#"><span class="material-icons me-1">edit</span><span>Редактор</span></a>
+						<a class="nav-link" :class="{'active':mode=='view'}" @click.prevent="changeMode('view')" href="#"><span class="material-icons me-1">edit</span><span>Редактор</span></a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" :class="{'active':mode=='tree'}" @click="changeMode('tree')" href="#"><span class="material-icons me-1">account_tree</span><span>Дерево</span></a>
+						<a class="nav-link" :class="{'active':mode=='tree'}" @click.prevent="changeMode('tree')" href="#"><span class="material-icons me-1">account_tree</span><span>Дерево</span></a>
 					</li>
 				</ul>
 				<div class="view workflow" v-show="mode=='view'">
@@ -190,7 +190,7 @@
 
 						<div v-for="type in types" class="mt-4">
 							<div v-for="relation of filterRelations(currentObject.id, type.value)" class="d-flex my-2">
-								<div class="w-50 me-2"><a href="#" @click="openObject(relation.id2)"><span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}}</a></div>
+								<div class="w-50 me-2"><a href="#" @click.prevent="openObject(relation.id2)"><span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}}</a></div>
 								<div class="w-100">{{relation.description}}</div>
 								<div class="d-inline-flex align-items-start">
 									<button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" :data-bs-target="'#updateRelation'+relation.id2" @click="editRelation(relation.id1, relation.id2)"><span class="material-icons">edit</span></button>
@@ -254,13 +254,14 @@
 				</div>
 				<div v-show="mode=='tree'" class="workflow" :class="{fullScreen:fullScreen}">
 					<div class="d-flex justify-content-between align-items-center">
-						<h3 class="ms-3">{{currentObject.title}}</h3>
-						<div class="m-3 text-end">
-							<botton class="btn btn-secondary btn-sm me-1" @click="fullScreen=false" v-if="fullScreen"><span class="material-icons">close_fullscreen</span></botton>
-							<botton class="btn btn-secondary btn-sm me-1" @click="fullScreen=true" title="на полный экран" v-else><span class="material-icons">open_in_full</span></botton>
-							<button class="btn btn-secondary btn-sm me-1" @click="zoomOut"><span class="material-icons">zoom_in</span> {{Math.round(scale*100)}}%</button>
+						<h3 class="m-0 ms-3">{{currentObject.title}}</h3>
+						<div class="m-3 text-end d-flex align-items-center">
+							<input class="form-range me-1" type="range" id="cowbell" min="0.3" max="3" value="1" step="0.1" v-model="scale">
+							<button class="btn btn-secondary btn-sm me-2 d-inline-flex align-items-center" @click="zoomOut"><span class="material-icons me-1">zoom_in</span><span style="width:4ch">{{Math.round(scale*100)}}%</span></button>
 							<button class="btn btn-secondary btn-sm me-1" @click="expandAll"><span class="material-icons" title="развернуть всё">library_add_check</span></button>
-							<button class="btn btn-secondary btn-sm" @click="collapseAll" title="свернуть всё"><span class="material-icons">indeterminate_check_box</span></button>
+							<button class="btn btn-secondary btn-sm me-2" @click="collapseAll" title="свернуть всё"><span class="material-icons">indeterminate_check_box</span></button>
+							<botton class="btn btn-secondary btn-sm me-1" @click="fullScreen=false" v-if="fullScreen"><span class="material-icons">close_fullscreen</span></botton>
+							<botton class="btn btn-secondary btn-sm" @click="fullScreen=true" title="на полный экран" v-else><span class="material-icons">open_in_full</span></botton>
 						</div>
 					</div>
 					<div class="treeview">
