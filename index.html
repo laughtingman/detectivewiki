@@ -120,6 +120,9 @@
 														<template v-slot:option="option">
 															<span class="material-icons me-1">{{getIcon(option.type)}}</span>{{option.title}}
 														</template>
+														<span slot="no-options" @click="$refs.select.open = false">
+    													Подходящие связи не найдены
+  													</span>
 													</v-select>
 												</p>
 												<p>включая все их связи в один объект <b><span class="material-icons">{{getIcon(currentObject.type)}}</span>{{currentObject.title}}</b>?</p>
@@ -183,6 +186,9 @@
 								<template v-slot:option="option">
 									<span class="material-icons">{{getIcon(option.type)}}</span> {{option.title}}
 								</template>
+								<span slot="no-options" @click="$refs.select.open = false">
+    							Подходящие связи не найдены
+  							</span>
 							</v-select>
 							<input type="text" class="form-control me-2" v-model="currentRelationDescription" placeholder="характер связи" v-on:keyup.enter="addRelation"></input>
 							<button class="btn btn-success" @click="addRelation" :disabled="currentRelationId==null"><span class="material-icons">add</span></button>
