@@ -181,7 +181,7 @@
 
 						<h3 class="mt-3">Связи</h3>
 
-						<div class="d-flex mt-2">
+						<div class="d-flex mt-2 align-items-start">
 							<v-select :options="filterOptions" label="title" :reduce="item => item.id" v-model="currentRelationId" class="select me-2">
 								<template v-slot:option="option">
 									<span class="material-icons">{{getIcon(option.type)}}</span> {{option.title}}
@@ -190,71 +190,91 @@
     							Подходящие связи не найдены
   							</span>
 							</v-select>
-							<input type="text" class="form-control me-2" v-model="currentRelationDescription" placeholder="характер связи" v-on:keyup.enter="addRelation"></input>
+							<textarea type="text" class="form-control me-2" v-model="currentRelationDescription" placeholder="характер связи" v-on:keyup.enter="addRelation"></textarea>
 							<button class="btn btn-success" @click="addRelation" :disabled="currentRelationId==null"><span class="material-icons">add</span></button>
 						</div>
 
-						<div v-for="type in types" class="mt-4 list-group list-group">
-							<div v-for="relation of filterRelations(currentObject.id, type.value)" class="d-flex list-group-item align-items-center">
-								<div class="w-50 me-2"><a href="#" @click.prevent="openObject(relation.id2)"><span class="material-icons me-1">{{type.icon}}</span><span class="name">{{getObject(relation.id2).title}}</span></a></div>
-								<div class="w-100">{{relation.description}}</div>
-								<div class="d-inline-flex align-items-start">
-									<button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" :data-bs-target="'#updateRelation'+relation.id2" @click="editRelation(relation.id1, relation.id2)"><span class="material-icons">edit</span></button>
+						<div class="accordion mt-5 accordion-flush">
 
-									<div class="modal fade" :id="'updateRelation'+relation.id2" tabindex="-1">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title" id="exampleModalLabel">Обновить связи?</h5>
-													<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+							<div v-for="type in types" class="accordion-item mt-3 border overflow-hidden rounded-2" v-if="filterRelations(currentObject.id, type.value).length >0">
+
+								<h2 class="accordion-header" id="panelsStayOpen-headingOne">
+									<button class="accordion-button shadow-none p-2 bg-light" type="button" data-bs-toggle="collapse" :data-bs-target="'#panel_'+type.value">
+										<span class="material-icons me-1">{{type.icon}}</span>{{type.label}}
+										<span class="badge bg-primary rounded-pill ms-2">{{filterRelations(currentObject.id, type.value).length}}</span>
+									</button>
+								</h2>
+
+								<div :id="'panel_' + type.value" class="accordion-collapse collapse show">
+
+									<div class="accordion-body list-group list-group-flush p-0">
+
+										<div v-for="relation of filterRelations(currentObject.id, type.value)" class="d-flex list-group-item align-items-center ">
+											<div class="w-50 me-2"><a href="#" @click.prevent="openObject(relation.id2)"><span class="name">{{getObject(relation.id2).title}}</span></a></div>
+											<div class="w-100" v-html="printText(relation.description)"></div>
+											<div class="d-inline-flex align-items-start">
+												<button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" :data-bs-target="'#updateRelation'+relation.id2" @click="editRelation(relation.id1, relation.id2)"><span class="material-icons">edit</span></button>
+
+												<div class="modal fade" :id="'updateRelation'+relation.id2" tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title" id="exampleModalLabel">Обновить связи?</h5>
+																<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+															</div>
+															<div class="modal-body">
+																<label class="form-group w-100">
+																	<span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}} &rarr; 
+																	<span class="material-icons me-1">{{getIcon(currentObject.type)}}</span>{{currentObject.title}}
+
+																	<textarea class="form-control" v-model="directRelationDescription"></textarea>
+																</label>
+																<label class="form-group w-100">
+
+																	<span class="material-icons me-1">{{getIcon(currentObject.type)}}</span>{{currentObject.title}} &rarr; 
+																	<span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}}
+																	
+																	<textarea class="form-control" v-model="reverseRelationDescription"></textarea>
+																</label>
+															</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+																<button type="button" class="btn btn-warning" @click="updateRelation(relation.id1, relation.id2)" data-bs-dismiss="modal">Обновить</button>
+															</div>
+														</div>
+													</div>
 												</div>
-												<div class="modal-body">
-													<label class="form-group w-100">
-														<span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}} &rarr; 
-														<span class="material-icons me-1">{{getIcon(currentObject.type)}}</span>{{currentObject.title}}
 
-														<textarea class="form-control" v-model="directRelationDescription"></textarea>
-													</label>
-													<label class="form-group w-100">
 
-														<span class="material-icons me-1">{{getIcon(currentObject.type)}}</span>{{currentObject.title}} &rarr; 
-														<span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}}
-														
-														<textarea class="form-control" v-model="reverseRelationDescription"></textarea>
-													</label>
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-													<button type="button" class="btn btn-warning" @click="updateRelation(relation.id1, relation.id2)" data-bs-dismiss="modal">Обновить</button>
+												<button class="btn btn-danger btn-sm" data-bs-toggle="modal" :data-bs-target="'#remRelation'+relation.id2"><span class="material-icons">delete</span></button>
+
+												<div class="modal fade" :id="'remRelation'+relation.id2" tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title" id="exampleModalLabel">Удалить связи?</h5>
+																<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+															</div>
+															<div class="modal-body">
+																<span class="material-icons me-1">{{getIcon(currentObject.type)}}</span>{{currentObject.title}} &rlarr; <span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}}
+															</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+																<button type="button" class="btn btn-danger" @click="remRelation(relation.id1, relation.id2)" data-bs-dismiss="modal">Удалить</button>
+															</div>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
+
 									</div>
-
-
-									<button class="btn btn-danger btn-sm" data-bs-toggle="modal" :data-bs-target="'#remRelation'+relation.id2"><span class="material-icons">delete</span></button>
-
-									<div class="modal fade" :id="'remRelation'+relation.id2" tabindex="-1">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title" id="exampleModalLabel">Удалить связи?</h5>
-													<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-												</div>
-												<div class="modal-body">
-													<span class="material-icons me-1">{{getIcon(currentObject.type)}}</span>{{currentObject.title}} &rlarr; <span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}}
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-													<button type="button" class="btn btn-danger" @click="remRelation(relation.id1, relation.id2)" data-bs-dismiss="modal">Удалить</button>
-												</div>
-											</div>
-										</div>
-									</div>
-
 								</div>
+
+								
 							</div>
-						</div>
+
+						</div>	
 
 					</div>
 				</div>

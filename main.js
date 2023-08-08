@@ -232,11 +232,15 @@ var app = new Vue({
 				let li = document.createElement("li");
 				let icon = this.types.find(z => z.value == obj.type).icon;
 
+				if (queueItem.title == "") {
+					queueItem.title = this.printText(obj.description);
+				}
+			
 				if (visited.indexOf(objId) != -1) {
 
 					li.innerHTML = `<div class="sub">
 						<a href="#" onclick="app.sctollToLi('l${objId}'); return false;"><span class='material-icons me-1'>${icon}</span><span class="name">${obj.title}</span></a>
-						<div class="text-secondary mx-2">${queueItem.title}</div>
+						<div class="text-secondary mx-2">${this.printText(queueItem.title)}</div>
 					</div>`;
 					queueItem.pid.appendChild(li);
 					continue;
@@ -246,7 +250,7 @@ var app = new Vue({
 
 				li.innerHTML = `
 										<div class="main" id="l${objId}" tabindex="0"><label for="${objId}"></label><a class="${cls}" href="#l${objId}" onclick='app.openObject("${objId}"); return false;'><span class='material-icons me-1'>${icon}</span><span class="name">${obj.title}</span></a>
-										<div class="text-secondary mx-2">${queueItem.title}</div>
+										<div class="text-secondary mx-2">${this.printText(queueItem.title)}</div>
 										</div>
 										<input type="checkbox" class="form-check-input" id="${objId}" checked>`;
 
@@ -456,6 +460,9 @@ var app = new Vue({
 			let txt = this.$refs["textarea"];
 			txt.style.height = "5em";
       txt.style.height = txt.scrollHeight + "px";
+		},
+		printText(text) {
+			return text.replace(/(?:\r\n|\r|\n)/g, '<br>');
 		}
 	},
 	computed: {

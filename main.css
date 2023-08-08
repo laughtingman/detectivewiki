@@ -410,3 +410,7 @@ a.disabled {
 .list-group:empty {
 	display: none;
 }
+
+textarea {
+	min-height: 80px !important;
+}
