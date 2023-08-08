@@ -176,7 +176,7 @@
 							<label for="datetime">Дата или относительное время события <sup>beta</sup></label>
 						</div>
 						<div class="fromgroup mt-2">
-							<textarea class="form-control" v-model="currentObject.description" id="desc" placeholder="описание"></textarea>
+							<textarea class="form-control overflow-hidden" v-model="currentObject.description" @input="resizeTextarea" id="desc" placeholder="описание" ref="textarea"></textarea>
 						</div>
 
 						<h3 class="mt-3">Связи</h3>

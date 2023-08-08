@@ -8,7 +8,7 @@ h5:only-child {
 }
 
 .material-icons {
-	font-size: 1em;
+	font-size: 1.4em;
 	vertical-align: -0.15em;
 }
 
@@ -132,8 +132,8 @@ html {
 
 .tree input[type=checkbox] {
 	position: absolute;
-	left: -1.1rem;
-	margin-bottom: -0.1rem;
+	left: -1.215rem;
+	margin-top: -0.05rem;
 	z-index: 2;
 }
 
@@ -343,10 +343,12 @@ a.disabled {
 
 .tree li>div:focus {
 	outline: 2px solid var(--bs-red);
+	z-index: 100;
 }
 
 .tree .sub a {
 	text-decoration-style: dashed;
+	text-decoration-thickness: from-font;
 }
 
 .tree div:hover:before {

@@ -109,11 +109,28 @@ var app = new Vue({
 				this.tree = this.makeTree(id);
 				this.sctollToLi("l"+id);
 				if (scrollMenu) this.scrollMenu();
+				this.resizeTextarea();
 			});
 		},
 
 		sctollToLi(id) {
 			let el = document.getElementById(id);
+
+			let parent = el.parentElement;
+			while(true) {
+				if (parent == null || parent.id == "tree") {
+					break;
+				}
+
+				if (parent.nodeName == "LI") {
+					let checkbox = parent.querySelector("input[type=checkbox]");
+					if (checkbox) {
+						checkbox.checked = true;
+					}
+				}
+				parent = parent.parentElement;
+			}
+
 			scroller = document.querySelector(".treeview .scroll");
 			offsets = getOffsets(el,"scroll");
 			scroller.scroll(
@@ -127,7 +144,7 @@ var app = new Vue({
 			document.querySelector(".content").scrollY = 0;
 
 			function getOffsets(el, cls) {
-				let parent = el, offsetTop = 0, offsetLeft =0;
+				let parent = el, offsetTop = 0, offsetLeft = 0;
 				while (true) {
 					offsetTop += parent.offsetTop;
 					offsetLeft += parent.offsetLeft;
@@ -197,8 +214,7 @@ var app = new Vue({
 		makeTree(id) {
 
 			let queue = [],
-				visited = [],
-				result = "";
+				visited = [];
 
 			let root = document.querySelector("#tree");
 			root.innerHTML = "";
@@ -229,7 +245,7 @@ var app = new Vue({
 
 				li.innerHTML = `
 										<div class="main" id="l${objId}" data-title="${queueItem.title}" tabindex="0"><label for="${objId}"></label><a class="${cls}" href="#l${objId}" onclick='app.openObject("${objId}"); return false;'><span class='material-icons me-1'>${icon}</span>${obj.title}</a></div>
-										<input type="checkbox" id="${objId}" checked>`;
+										<input type="checkbox" class="form-check-input" id="${objId}" checked>`;
 
 				let ul = document.createElement("ul");
 				li.appendChild(ul);
@@ -336,7 +352,7 @@ var app = new Vue({
 					}
 					reader.readAsText(file);
 				} else {
-					alert("Неправильный nbg файла!");
+					alert("Неправильный форомат файла!");
 				}
 			});
 			fileInput.click();
@@ -432,6 +448,11 @@ var app = new Vue({
 			this.currentObject.type = this.changedType;
 			this.changedType = null;
 			this.modalOpen = false;
+		},
+		resizeTextarea() {
+			let txt = this.$refs["textarea"];
+			txt.style.height = "5em";
+      txt.style.height = txt.scrollHeight + "px";
 		}
 	},
 	computed: {
