@@ -194,9 +194,9 @@
 							<button class="btn btn-success" @click="addRelation" :disabled="currentRelationId==null"><span class="material-icons">add</span></button>
 						</div>
 
-						<div v-for="type in types" class="mt-4">
-							<div v-for="relation of filterRelations(currentObject.id, type.value)" class="d-flex my-2">
-								<div class="w-50 me-2"><a href="#" @click.prevent="openObject(relation.id2)"><span class="material-icons me-1">{{type.icon}}</span>{{getObject(relation.id2).title}}</a></div>
+						<div v-for="type in types" class="mt-4 list-group list-group">
+							<div v-for="relation of filterRelations(currentObject.id, type.value)" class="d-flex list-group-item align-items-center">
+								<div class="w-50 me-2"><a href="#" @click.prevent="openObject(relation.id2)"><span class="material-icons me-1">{{type.icon}}</span><span class="name">{{getObject(relation.id2).title}}</span></a></div>
 								<div class="w-100">{{relation.description}}</div>
 								<div class="d-inline-flex align-items-start">
 									<button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" :data-bs-target="'#updateRelation'+relation.id2" @click="editRelation(relation.id1, relation.id2)"><span class="material-icons">edit</span></button>

@@ -9,7 +9,7 @@ h5:only-child {
 
 .material-icons {
 	font-size: 1.4em;
-	vertical-align: -0.15em;
+	vertical-align: -0.25em;
 }
 
 .material-icons.rotate {
@@ -143,6 +143,7 @@ html {
 
 .tree div a {
 	padding: 0.3rem 0.4rem 0.3rem 0.3rem;
+	text-underline-offset: 0.1em;
 }
 
 .tree.tree.horizontal {
@@ -324,23 +325,6 @@ a.disabled {
 	margin: auto;
 }
 
-.tree div:before {
-	content: attr(data-title);
-	display: block;
-	position: absolute;
-	background: #444;
-	color:white;
-	margin-top:-1.8rem;
-	width: fit-content;
-	font-size: 0.8em;
-	padding: 0 0.3rem;
-	border-radius: .2rem;
-	opacity: 0;
-	transition: opacity .5s;
-	z-index: 999;
-	pointer-events: none;
-}
-
 .tree li>div:focus {
 	outline: 2px solid var(--bs-red);
 	z-index: 100;
@@ -353,6 +337,10 @@ a.disabled {
 
 .tree div:hover:before {
 	opacity: 1;
+}
+
+.tree li:hover>div a {
+	color: crimson;
 }
 
 .form-control:focus, .btn:focus, .form-check-input:focus {
@@ -395,6 +383,8 @@ a.disabled {
 
 .vs__dropdown-toggle {
   justify-content: space-between;
+	border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
 }
 
 .vs__clear {
@@ -415,4 +405,8 @@ a.disabled {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
+}
+
+.list-group:empty {
+	display: none;
 }

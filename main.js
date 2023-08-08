@@ -234,8 +234,9 @@ var app = new Vue({
 
 				if (visited.indexOf(objId) != -1) {
 
-					li.innerHTML = `<div class="sub" data-title="${queueItem.title}">
-						<a href="#" onclick="app.sctollToLi('l${objId}'); return false;"><span class='material-icons me-1'>${icon}</span>${obj.title}</a>
+					li.innerHTML = `<div class="sub">
+						<a href="#" onclick="app.sctollToLi('l${objId}'); return false;"><span class='material-icons me-1'>${icon}</span><span class="name">${obj.title}</span></a>
+						<div class="text-secondary mx-2">${queueItem.title}</div>
 					</div>`;
 					queueItem.pid.appendChild(li);
 					continue;
@@ -244,7 +245,9 @@ var app = new Vue({
 				let cls = (id == objId) ? "disabled" : "";
 
 				li.innerHTML = `
-										<div class="main" id="l${objId}" data-title="${queueItem.title}" tabindex="0"><label for="${objId}"></label><a class="${cls}" href="#l${objId}" onclick='app.openObject("${objId}"); return false;'><span class='material-icons me-1'>${icon}</span>${obj.title}</a></div>
+										<div class="main" id="l${objId}" tabindex="0"><label for="${objId}"></label><a class="${cls}" href="#l${objId}" onclick='app.openObject("${objId}"); return false;'><span class='material-icons me-1'>${icon}</span><span class="name">${obj.title}</span></a>
+										<div class="text-secondary mx-2">${queueItem.title}</div>
+										</div>
 										<input type="checkbox" class="form-check-input" id="${objId}" checked>`;
 
 				let ul = document.createElement("ul");
