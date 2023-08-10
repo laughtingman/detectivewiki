@@ -1,6 +1,26 @@
 Vue.component('v-select', VueSelect.VueSelect);
 
-var app = new Vue({
+
+
+const classMap = {
+	table: "table" //add class table to all tables
+};
+
+const bindings = Object.keys(classMap).map((key) => ({
+	type: "output",
+	regex: new RegExp(`<${key}(.*)>`, "g"),
+	replace: `<${key} class="${classMap[key]}" $1>`
+}));
+
+const markdown = new showdown.Converter({
+	simplifiedAutoLink: true,
+	tables: true,
+	simpleLineBreaks: true,
+	headerLevelStart: 2,
+	extensions: [bindings]
+});
+
+const app = new Vue({
 	el: "#app",
 	data() {
 		return {
@@ -54,7 +74,8 @@ var app = new Vue({
 					value: "concepts",
 					icon: "psychology"
 				},
-			]
+			],
+			readmode: false,
 		}
 	},
 	methods: {
@@ -100,6 +121,10 @@ var app = new Vue({
 
 			if (this.tab != obj.type)
 				this.openTab(obj.type);
+
+			if (obj.notes == undefined) {
+				obj.notes = "";
+			}
 
 			this.currentObject = obj;
 			this.currentRelationId = null;
@@ -364,22 +389,47 @@ var app = new Vue({
 			});
 			fileInput.click();
 		},
+		download(content, fileName, contentType) {
+			let a = document.createElement("a");
+			let file = new Blob([content], {
+				type: contentType
+			});
+			a.href = URL.createObjectURL(file);
+			a.download = fileName;
+			a.click();
+			a.remove();
+		},
 		saveToFile() {
-			let download = function(content, fileName, contentType) {
-				let a = document.createElement("a");
-				let file = new Blob([content], {
-					type: contentType
-				});
-				a.href = URL.createObjectURL(file);
-				a.download = fileName;
-				a.click();
-				a.remove();
-			};
 			let data = {
 				objects: this.objects,
 				relations: this.relations,
 			};
-			download(JSON.stringify(data), 'detective.json', 'text/plain');
+			this.download(JSON.stringify(data), 'detective.json', 'text/plain');
+		},
+		saveNote() {
+			let name = this.currentObject.title.length > 0 ? this.currentObject.title : "Без имени";
+			name += ".md";
+			this.download(this.currentObject.notes, name, "text/plain");
+		},
+		printNote() {
+			let name = this.currentObject.title.length > 0 ? this.currentObject.title : "Без имени";
+			let content = document.getElementById("notesHtml").innerHTML;
+			let w = window.open('', 'PRINT', 'height=500, width=500');
+			w.document.write(`
+				<html>
+					<style>
+						body {font-family: Arial}
+					</style>
+					<body>
+						<h1>${name}</h1>
+						${content}
+					</body>
+				<html>
+			`);
+			w.document.close();
+			w.focus();
+			w.print();
+			w.close();
 		},
 		clearAll() {
 				this.objects = [];
@@ -463,6 +513,9 @@ var app = new Vue({
 		},
 		printText(text) {
 			return text.replace(/(?:\r\n|\r|\n)/g, '<br>');
+		},
+		renderHtml(text) {
+			return markdown.makeHtml(text);
 		}
 	},
 	computed: {
@@ -515,9 +568,13 @@ var app = new Vue({
 			this.options = JSON.parse(localStorage.getItem("detective_options"));
 		}
 
-		document.addEventListener('keyup', (event) => {
+		document.addEventListener('keydown', (event) => {
+			console.log(event.key);
 			if (event.key === "Escape") {
 					this.fullScreen = false;
+			} else if (event.ctrlKey && event.key === "e") {
+				event.preventDefault();
+				this.readmode = !this.readmode;
 			}
 		});
 	},
