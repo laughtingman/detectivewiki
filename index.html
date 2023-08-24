@@ -331,7 +331,7 @@
 					<div v-if="readmode==false" class="h-100 position-relative overflow-hidden">
 						<editor id="editor" v-model="currentObject.notes"></editor>
 					</div>
-					<div id="notesHtml" v-html="renderHtml(currentObject.notes)" v-if="readmode==true" class="p-3 readmode"></div>
+					<div id="notesHtml" v-html="renderHtml(currentObject.notes)" v-show="readmode==true" class="p-3 readmode"></div>
 				</div>
 			</div>
 			<div class="text-center w-100" v-else>не выбрано</div>

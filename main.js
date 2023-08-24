@@ -569,7 +569,6 @@ const app = new Vue({
 		}
 
 		document.addEventListener('keydown', (event) => {
-			console.log(event.key);
 			if (event.key === "Escape") {
 					this.fullScreen = false;
 			} else if (event.ctrlKey && event.key === "e") {
