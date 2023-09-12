@@ -440,3 +440,12 @@ textarea {
 	border-top: 1px solid rgba(0, 0, 0, .125);
 	box-shadow: rgb(238, 238, 238) 0px 0px 15px inset;
 }
+
+.show {
+	transition: opacity 100ms;
+}
+
+.callout {
+	border-left: 3px solid var(--bs-border-color);
+	padding-left: 1rem;
+}

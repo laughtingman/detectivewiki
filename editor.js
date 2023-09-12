@@ -16,7 +16,6 @@ Vue.component("Editor", {
 			}
 		}
 	},
-
 	mounted() {
 		const editor = CodeMirror.fromTextArea(document.getElementById(this.id), {
 			theme: "elegant",
@@ -26,7 +25,10 @@ Vue.component("Editor", {
 			indentWithTabs: true,
 			highlightFormatting: true,
 			foldGutter: true,
-			gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+			gutters: [
+				"CodeMirror-linenumbers", 
+				"CodeMirror-foldgutter"
+			],
 			extraKeys: {
 				"Ctrl-B": function(cm) {
 

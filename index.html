@@ -81,6 +81,7 @@
 							<span v-if="item.title.length">{{item.title}}</span>
 							<span v-else>без имени</span>
 						</a>
+						<span v-if="filterObjects.length==0" class="text-center fst-italic my-2">Пока нет объектов</span>
 					</div>
 				</div>
 				<div class="resizer" @mousedown="resizeDown">&nbsp;</div>
@@ -221,7 +222,7 @@
 								<h2 class="accordion-header" id="panelsStayOpen-headingOne">
 									<button class="accordion-button shadow-none p-2 bg-light" type="button" data-bs-toggle="collapse" :data-bs-target="'#panel_'+type.value">
 										<span class="material-icons me-1">{{type.icon}}</span>{{type.label}}
-										<span class="badge bg-primary rounded-pill ms-2">{{filterRelations(currentObject.id, type.value).length}}</span>
+										<span class="badge bg-light rounded-pill ms-2">{{filterRelations(currentObject.id, type.value).length}}</span>
 									</button>
 								</h2>
 
@@ -233,7 +234,8 @@
 											<div class="w-50 me-2"><a href="#" @click.prevent="openObject(relation.id2)"><span class="name">{{getObject(relation.id2).title}}</span></a></div>
 											<div class="w-100" v-html="printText(relation.description)"></div>
 											<div class="d-inline-flex align-items-start">
-												<button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" :data-bs-target="'#updateRelation'+relation.id2" @click="editRelation(relation.id1, relation.id2)"><span class="material-icons">edit</span></button>
+												
+												<button class="btn btn-link text-warning btn-sm me-2" data-bs-toggle="modal" :data-bs-target="'#updateRelation'+relation.id2" @click="editRelation(relation.id1, relation.id2)" title="Изменить описание"><span class="material-icons">edit</span></button>
 
 												<div class="modal fade" :id="'updateRelation'+relation.id2" tabindex="-1">
 													<div class="modal-dialog">
@@ -266,7 +268,7 @@
 												</div>
 
 
-												<button class="btn btn-danger btn-sm" data-bs-toggle="modal" :data-bs-target="'#remRelation'+relation.id2"><span class="material-icons">delete</span></button>
+												<button class="btn btn-link text-danger btn-sm" data-bs-toggle="modal" :data-bs-target="'#remRelation'+relation.id2" title="Удалить связь"><span class="material-icons">delete</span></button>
 
 												<div class="modal fade" :id="'remRelation'+relation.id2" tabindex="-1">
 													<div class="modal-dialog">
@@ -334,7 +336,14 @@
 					<div id="notesHtml" v-html="renderHtml(currentObject.notes)" v-show="readmode==true" class="p-3 readmode"></div>
 				</div>
 			</div>
-			<div class="text-center w-100" v-else>не выбрано</div>
+			<div v-else class="w-100">
+				<div class="w-100 m-auto d-flex" style="max-width: 600px;">
+					<span class="material-icons me-2">help</span>
+					<div v-for="type in types" v-if="tab==type.value" v-html="type.description"></div>
+				</div>
+				
+				<p class="text-center my-4 w-100 fst-italic">Пока ничего не выбрано</p>
+			</div>
 		</div>
 	</div>
 	<script src="editor.js"></script>
