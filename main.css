@@ -330,13 +330,16 @@ a.disabled {
 
 .resizer {
 	width: 15px;
-	cursor: e-resize;
 	position: absolute;
 	height: 80%;
 	left:100%;
 	top:0;
 	bottom: 0;
 	margin: auto;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==);
+    cursor: col-resize;
+		background-repeat: no-repeat;
+		background-position: center;
 }
 
 .tree li>div:focus {

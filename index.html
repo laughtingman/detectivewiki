@@ -84,7 +84,7 @@
 						<span v-if="filterObjects.length==0" class="text-center fst-italic my-2">Пока нет объектов</span>
 					</div>
 				</div>
-				<div class="resizer" @mousedown="resizeDown">&nbsp;</div>
+				<div class="resizer" @mousedown="resizeDown" @mouseup="resizeUp">&nbsp;</div>
 			</div>
 
 			<div class="mainbar" v-if="currentObject != null" style="overflow-x: hidden;">
