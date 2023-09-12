@@ -336,13 +336,11 @@
 					<div id="notesHtml" v-html="renderHtml(currentObject.notes)" v-show="readmode==true" class="p-3 readmode"></div>
 				</div>
 			</div>
-			<div v-else class="w-100">
-				<div class="w-100 m-auto d-flex" style="max-width: 600px;">
-					<span class="material-icons me-2">help</span>
+			<div v-else class="w-100 h-100 d-flex align-items-center">
+				<div class="text-secondary m-auto d-flex"style="max-width: 600px;">
+					<span class="material-icons me-2">info</span>
 					<div v-for="type in types" v-if="tab==type.value" v-html="type.description"></div>
 				</div>
-				
-				<p class="text-center my-4 w-100 fst-italic">Пока ничего не выбрано</p>
 			</div>
 		</div>
 	</div>
